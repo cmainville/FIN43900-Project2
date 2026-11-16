@@ -2,7 +2,14 @@
 
 import streamlit as st
 
-from portfolio_engine import TICKERS, WARNING, analyze
+from portfolio_engine import (
+    SIGNAL_END,
+    SIGNAL_START,
+    SNAPSHOT_RETRIEVED,
+    TICKERS,
+    WARNING,
+    analyze,
+)
 
 
 st.set_page_config(page_title="FIN 43900 | Portfolio Decision System", layout="wide")
@@ -15,6 +22,33 @@ def results():
 
 def weight_table(result):
     return [{"ETF": ticker, "Weight": f"{result['weights'][ticker]:.0%}"} for ticker in TICKERS]
+
+
+def weights_text(result):
+    return " / ".join(f"{result['weights'][ticker]:.0%}" for ticker in TICKERS)
+
+
+def scenario_rows(scenarios):
+    rows = []
+    for scenario in scenarios:
+        solution = scenario["solution"]
+        result = solution["result"]
+        change = scenario["change"]
+        movement = (
+            "—" if change is None else
+            "0 pp" if change[1] < 1e-9 else
+            f"{change[0]} {change[1]:.0f} pp"
+        )
+        rows.append({
+            "Scenario": scenario["label"],
+            "Feasible": "YES" if solution["feasible"] else "NO",
+            "Weights (VTI / VXUS / XLE / IWM / IAU)": weights_text(result) if result else "—",
+            "Estimated return": f"{result['return']:.2%}" if result else "—",
+            "Estimated volatility": f"{result['volatility']:.2%}" if result else "—",
+            "Feasible candidates": f"{solution['feasible_count']:,}/{solution['candidate_count']:,}",
+            "Largest change vs 6% base": movement,
+        })
+    return rows
 
 
 def show_portfolio(name, result):
@@ -38,9 +72,13 @@ def show_portfolio(name, result):
         st.caption("Passes modeled mandate checks; this is not an investment suitability verdict.")
 
 
-data = results()
 st.title("FIN 43900 | Portfolio Decision System")
 st.caption("Fixed historical snapshot · Estimated results, not a recommendation")
+try:
+    data = results()
+except (OSError, ValueError) as exc:
+    st.error(f"HARD FAILURE — Required input data or optimization failed: {exc}")
+    st.stop()
 
 mandate_tab, portfolio_tab, signal_tab, decision_tab = st.tabs(
     ["Mandate & Data", "Portfolio Analysis", "Signal & Stress Tests", "Committee Decision"]
@@ -100,6 +138,26 @@ with portfolio_tab:
 
 with signal_tab:
     st.header("Signal & Stress Tests")
+    st.subheader("One cross-sectional momentum signal")
+    st.write(
+        f"Trailing 12-month adjusted-price return, {SIGNAL_START} to {SIGNAL_END}; "
+        f"frozen snapshot retrieved {SNAPSHOT_RETRIEVED}. Ranking is evidence only, "
+        "not an optimizer input or automatic allocation instruction."
+    )
+    st.table([
+        {"Rank": row["rank"], "ETF": row["ticker"],
+         "12-month adjusted-price momentum": f"{row['momentum']:.2%}"}
+        for row in data["momentum"]
+    ])
+    with st.expander("Signal data card"):
+        st.write(
+            "Source: Yahoo Finance daily Adj Close in the frozen Lab 15 CSV. "
+            "Formula: September 2026 adjusted price ÷ September 2025 adjusted price − 1. "
+            "The observation cutoff is September 30, 2026; the documented retrieval "
+            "and availability boundary is October 22, 2026. No later prices or forward returns are used. "
+            "A missing or nonpositive endpoint makes the signal unavailable. Adjusted histories "
+            "can be revised, and this later snapshot is not proof of what was archived on September 30."
+        )
     st.subheader("Estimation-window stability")
     for label, key in (("Full history · 59 monthly returns", "optimized_full"),
                        ("Recent history · last 36 monthly returns", "optimized_recent")):
@@ -128,8 +186,28 @@ with signal_tab:
         "The threshold is a monitoring trigger only; historical minimum volatility "
         "does not guarantee future stability."
     )
-    st.info("TODO — Add one point-in-time signal and its data card in Milestone 3.")
-    st.info("TODO — Add estimate, cost, and constraint stress scenarios in Milestone 3.")
+    st.subheader("Estimation sensitivity")
+    st.table(scenario_rows(data["estimation_scenarios"]))
+    st.caption(
+        "The IAU return cut leaves weights unchanged because the 6% floor remains slack; "
+        "zero movement does not prove return estimates are reliable. The volatility shock "
+        "keeps correlations fixed and rebuilds covariance."
+    )
+    st.subheader("One-time B → C execution costs")
+    st.table([
+        {"Cost per dollar traded": f"{row['basis_points']:.0f} bps",
+         "One-way turnover": f"{row['one_way_turnover']:.1%}",
+         "Total buys + sells": f"{row['total_traded']:.1%}",
+         "One-time cost / portfolio": f"{row['cost']:.3%}"}
+        for row in data["cost_scenarios"]
+    ])
+    st.caption(
+        "Costs apply to both buys and sells; they are not subtracted from annual "
+        "expected returns. These illustrative amounts exclude taxes and may omit other frictions."
+    )
+    st.subheader("Return-floor sensitivity")
+    st.table(scenario_rows(data["constraint_scenarios"]))
+    st.caption("The 16% and 25% floors are hypothetical scenarios, not mandate changes.")
 
 with decision_tab:
     st.header("Committee Decision")
@@ -143,8 +221,15 @@ with decision_tab:
         )
     else:
         st.error("No full-window grid allocation meets the provisional return objective.")
-    if data["stability_triggered"]:
+    process = data["process"]
+    st.subheader(f"Implementation process status: {process['status']}")
+    for reason in process["reasons"]:
+        st.write(f"- {reason}")
+    if process["status"] == "REVIEW HOLD":
         st.error(WARNING)
+        st.write("Implementation requires further independent review and committee authorization.")
+    elif process["status"] == "HARD FAILURE":
+        st.error("Implementation must pause until data integrity and feasibility are restored.")
     st.write(
         "These are historical estimates. Hard-rule compliance is separate from "
         "investment suitability, and the window change requires independent review."
