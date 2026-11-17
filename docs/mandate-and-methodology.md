@@ -1,6 +1,6 @@
 # Project 2 Mandate and Portfolio Methodology
 
-**Status:** Milestone 4A supplementary historical analysis implemented and tested, 2026-11-16. Calculated results appear in [visible-executed-output.md](visible-executed-output.md). They are historical estimates, not an investment recommendation.
+**Status:** Milestone 5A dashboard implemented, 2026-11-16. The approved engine's calculated results remain in [visible-executed-output.md](visible-executed-output.md). They are historical estimates, not an investment recommendation.
 
 ## Mandate transition and approved mandate
 
@@ -55,6 +55,18 @@ The extended-vs-original largest change is **10 points in XLE**; extended-vs-rec
 
 The existing 12-month momentum ranking puts XLE first and IAU last, while the extended minimum-variance solution holds zero XLE and 50% IAU. The difference is not a calculation error: momentum ranks backward-looking adjusted-price change, whereas the optimizer minimizes estimated covariance risk. This single signal has not demonstrated predictive accuracy and does not alter the optimizer.
 
+## Illustrative diversification policy — not approved
+
+Milestone 4B tests **IAU ≤20% and VXUS ≥15%** as one hypothetical policy overlay. The motivation is possible long-horizon suitability and strategic international diversification, not maximizing historical performance. The approved Lab 15 mandate, minimum-volatility objective, provisional 6% arithmetic-return floor, five-point grid, baselines, and Portfolio C are unchanged. The same optimizer filters grid allocations by the illustrative bounds and return floor; it reports infeasibility instead of relaxing a limit. These bounds would require student and committee approval before becoming policy.
+
+| Window | Original weights (VTI/VXUS/XLE/IWM/IAU) | Illustrative weights | Estimated return: original → illustrative | Estimated volatility: original → illustrative |
+| --- | --- | --- | --- | --- |
+| Extended 119 returns | 50/0/0/0/50% | 40/40/0/0/20% | 14.12% → 12.81% | 11.69% → 12.92% |
+| Original 59 returns | 50/0/10/0/40% | 40/25/15/0/20% | 15.66% → 14.30% | 12.27% → 12.85% |
+| Recent 36 returns | 45/20/20/0/15% | 45/20/20/0/15% | 20.76% → 20.76% | 9.79% → 9.79% |
+
+All three illustrative searches are feasible, each with **4,165 of 10,626** grid allocations satisfying the overlay and return floor. The additional estimated volatility is **1.23 percentage points** on the extended window, **0.57 points** on the original window, and **zero** on the recent window, comparing allocations under each window's *same* covariance matrix. The extended-window cost is visible rather than negligible; whether it is acceptable depends on the student's suitability judgment. These are in-sample estimated risk costs; different-window volatility levels are not directly comparable. The overlay lowers IAU to at most 20% and raises VXUS to at least 20% in these selected portfolios; VTI remains 40–45%. It changes the illustrative 59-vs-36 largest allocation move to **5 points in XLE**, below the strict >20-point trigger. The approved original process still moves IAU **25 points** and remains on **REVIEW HOLD**. Reduced modeled instability does not establish suitability or future stability.
+
 ## Point-in-time signal data card
 
 | Field | Definition |
@@ -81,6 +93,12 @@ The return-floor sensitivity reruns the original full-window estimates at **6%**
 
 ## Validation and remaining scope
 
-[`test_portfolio_engine.py`](../test_portfolio_engine.py) uses independent monthly-return and covariance fixtures and checks the prior portfolio results against [Lab 15's known answers](https://github.com/cmainville/FIN43900/blob/main/lab15/lab15-notes.md). [`test_milestone3.py`](../test_milestone3.py) covers the signal's boundaries and ranking, isolated estimate changes, correlation-preserving volatility stress, buy-plus-sell costs, feasible/infeasible floors, and process-status precedence. [`test_extended.py`](../test_extended.py) checks the 120-price source, offline raw-response replay, independently calculated return/covariance/risk quantities, and preservation of original allocations and monitoring. Results and Streamlit checks are recorded in [validation-and-ai-use.md](validation-and-ai-use.md). Student review of data provenance, calculations, and investment suitability remains pending.
+The Streamlit dashboard opens on Overview; Analytics contains Portfolio Explorer, Optimization, Risk & Stress Tests, and Historical Analysis; Decision reserves the final judgment. Interactive controls are hypothetical and use frozen local data. The default Optimization controls reproduce the original 59-return, 6% floor, no-cap Portfolio C. Turning on an IAU cap or VXUS minimum, changing a return/volatility estimate, or selecting another window does not amend the approved mandate or overwrite the visible executed output.
+
+The interactive frontier uses the same **10,626** five-point candidates. It filters by displayed return floor and any enabled hypothetical bounds, then retains nondominated risk-return points: no other feasible candidate may have both equal-or-lower volatility and equal-or-higher return. A representative sample of the feasible cloud is shown for readability; the boundary is calculated from the **full** feasible set. Return overrides change annual arithmetic means. Volatility overrides scale the selected window's covariance matrix on both axes, preserving its estimated correlations; finite and positive inputs and covariance validity are checked. The approved engine's formulas and deterministic optimizer remain unchanged.
+
+Historical growth starts from hypothetical **$100**, applies monthly simple portfolio returns, and resets to the displayed fixed weights each month. Maximum drawdown is the largest peak-to-trough decline in that **monthly-observed** wealth series. The selected estimation window supplies the prices and correlation matrix for the risk view: 120 prices for 119 returns, 60 for 59, or 37 for 36. Optimized weights used on their own estimation period are in-sample hindsight reconstructions, not independent backtests or forward forecasts. A custom allocation must contain the five approved ETFs, be long-only, and total exactly 100%; the dashboard never normalizes invalid weights.
+
+[`test_portfolio_engine.py`](../test_portfolio_engine.py) uses independent monthly-return and covariance fixtures and checks the prior portfolio results against [Lab 15's known answers](https://github.com/cmainville/FIN43900/blob/main/lab15/lab15-notes.md). [`test_milestone3.py`](../test_milestone3.py) covers the signal, estimate changes, covariance stress, costs, constraint floors, and process status. [`test_extended.py`](../test_extended.py) checks the source, offline replay, direct arithmetic, and original results. [`test_policy.py`](../test_policy.py) independently enumerates a small diagonal-covariance fixture, rejects infeasible or invalid bounds, directly checks returns and risk from frozen prices, checks unchanged original results and source hashes, and compares app-displayed policy values with engine output. Results and Streamlit checks are recorded in [validation-and-ai-use.md](validation-and-ai-use.md). These AI-assisted tests are not a substitute for independent student review of data, math, policy suitability, and final judgment.
 
 Independent investment suitability review, the committee recommendation, allocation range, and committee ask remain pending. The Locked Changed-Input Record remains empty until the student personally authors and commits the AI-off prediction before its separate designated run.

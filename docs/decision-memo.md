@@ -4,17 +4,17 @@ Ownership and educational purpose: The investment analysis and final decision wi
 
 # Investment Committee Decision Memo — Outline
 
-**Status:** Outline only. No investment conclusion or supporting analysis has been verified.
+**Status:** Outline only. Engine output has passed automated checks; independent student validation and the investment conclusion remain pending.
 
 ## Decision and committee ask
 
-- **Recommendation:** TODO — adopt, allocate to, rebalance, pilot, or reject the process under the Lab 13 mandate.
+- **Recommendation:** TODO — adopt, allocate to, rebalance, pilot, or reject the process under the approved Lab 15 amendment to the earlier Lab 13 mandate.
 - **Allocation range:** TODO — provide a defensible range, including the basis for its bounds. No range is proposed yet.
 - **Committee ask:** TODO — specify the approval, pilot, revision, or rejection action requested.
 
 ## Mandate and evidence
 
-- **Objective, intended user, universe, benchmark, risk measure, and limits:** TODO — reconcile with Lab 13.
+- **Objective, intended user, universe, benchmark, risk measure, and limits:** TODO — summarize the approved Lab 15 amendment governing Project 2; distinguish any illustrative policy overlay from active limits.
 - **As-of date and strongest evidence:** TODO — cite traceable sources and visible executed output.
 - **Portfolio comparison:** TODO — equal weight, a second transparent baseline, and the constrained portfolio; show mandate verdicts and the rules behind any failures.
 - **Point-in-time signal:** TODO — summarize its data card and decision role.
