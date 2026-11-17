@@ -1,4 +1,4 @@
-# Changed-Input Test 2 — AI-Assisted Draft
+# Locked Changed-Input Record — Test 2
 
 ## Part A — Prediction Before Execution
 
