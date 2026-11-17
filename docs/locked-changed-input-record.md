@@ -46,3 +46,36 @@ XLE benefited from strong energy-sector performance during much of the historica
 
 ## Part B — Actual Results (After Execution)
 
+**Pre-Test Git Commit SHA:** 3c05cd3be7bbe6e9edba57bd9995f08da1ae0e4c
+
+**Execution Date and Time:** Tuesday Novemeber 17th, 4:27pm
+
+**Original Output:**
+
+My original Portfolio D allocation had an estimated annual arithmetic return of 13.74% and annualized volatility of 13.27%. The portfolio satisfied the investment mandate.
+
+**Changed Output:**
+
+After increasing IWM from 5% to 15% and reducing XLE from 15% to 5%, the estimated annual return decreased to 12.24%, while annualized volatility increased to 13.87%.
+
+This represents a 1.50 percentage-point reduction in estimated return and a 0.60 percentage-point increase in volatility. The revised portfolio continued to satisfy the mandate.
+
+**Actual Effect on Investment Decision:**
+
+The results weakened the case for changing my original Portfolio D allocation. Although increasing IWM reduced my direct concentration in the energy sector, the revised portfolio produced a less favorable historical risk-return combination. I would maintain my original Portfolio D recommendation rather than adopt the revised allocation. The original REVIEW HOLD remains in effect.
+
+**Did the Results Match My Prediction?**
+
+Yes. I predicted that increasing IWM and reducing XLE would decrease estimated return and increase volatility. Both changes occurred in the expected direction.
+
+**Explanation of Results or Discrepancies:**
+
+The results were consistent with my expectation that reducing XLE exposure would lower historical estimated returns over the selected period. Replacing part of that allocation with IWM also increased portfolio volatility, suggesting that the revised combination of asset weights and historical covariances was less effective at reducing risk.
+
+This test demonstrates how sensitive portfolio outcomes can be to allocation decisions. However, these results are based on historical estimates and do not establish that XLE will outperform IWM in the future.
+
+**Supporting Evidence:**
+
+- [Before Screenshot](evidence/locked-before.png)
+- [After Screenshot](evidence/locked-after.png)
+- Pre-test prediction commit:(https://github.com/cmainville/FIN43900-Project2/commit/3c05cd3be7bbe6e9edba57bd9995f08da1ae0e4c)
