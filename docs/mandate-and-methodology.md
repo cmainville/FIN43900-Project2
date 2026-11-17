@@ -1,6 +1,6 @@
 # Project 2 Mandate and Portfolio Methodology
 
-**Status:** Milestone 3 implemented and tested, 2026-11-15. Calculated results appear in [visible-executed-output.md](visible-executed-output.md). They are historical estimates, not an investment recommendation.
+**Status:** Milestone 4A supplementary historical analysis implemented and tested, 2026-11-16. Calculated results appear in [visible-executed-output.md](visible-executed-output.md). They are historical estimates, not an investment recommendation.
 
 ## Mandate transition and approved mandate
 
@@ -43,6 +43,18 @@ The engine independently re-estimates return and covariance on the 59-return and
 
 The 6% floor is slack for every grid allocation in this historical sample. Thus the selected portfolios largely reflect estimated covariance rather than a binding return threshold. This is a sample result, not a basis for assuming future returns will clear 6%.
 
+## Supplementary ten-year robustness and IAU concentration
+
+A separate [Yahoo adjusted-close snapshot](../data/extended-provenance.md), retrieved **2026-11-16**, supplies 120 aligned monthly prices from October 2016 through September 2026 and **119 monthly simple returns**. Its raw responses and CSV are frozen with SHA-256 hashes and an offline replay script. The older Lab 15 CSV remains unchanged for the original **59** and recent **36** returns; the two downloads are not spliced. Their overlapping rows differ slightly, with the cause not independently established. Calendar month-end is the observation label, not the retrieval date or a claim of historical point-in-time archiving.
+
+The same arithmetic-return, sample-covariance, and 5-point grid methodology selects **50% VTI / 50% IAU** on 119 returns, versus **50% VTI / 10% XLE / 40% IAU** on 59 returns and **45% VTI / 20% VXUS / 20% XLE / 15% IAU** on 36 returns. All **10,626** grid allocations clear the provisional 6% floor in each sample, so the floor does not drive these choices. The new window increases IAU concentration and leaves VXUS at zero. It therefore challenges the idea that a longer history alone will produce a larger international-equity core.
+
+On the extended sample, IAU's standalone annualized volatility is **15.47%**. Its sample correlations with VTI, VXUS, XLE, and IWM are **0.118, 0.347, −0.013, and 0.010**. Low covariance with VTI lets a 50/50 mix have estimated volatility **11.69%**, below either standalone ETF. This explains the grid optimizer's choice under the approved objective; it does not establish that 50% gold is suitable for a 15-year wealth-accumulation client. A gold cap or equity minimum would be a new policy choice for the student and committee, not an error correction or a rule implemented here.
+
+The extended-vs-original largest change is **10 points in XLE**; extended-vs-recent is **35 points in IAU**. These are supplementary comparisons. The approved implementation monitoring rule still uses only the original **59-vs-36** comparison, which breaches at **25 IAU points** and remains a **REVIEW HOLD**. Each window's reported volatility uses different estimates. For an additional like-for-like risk comparison, the three selected portfolios are evaluated on the common extended covariance matrix in the visible output. These overlapping windows are **not** an independent out-of-sample backtest, and ten years still falls short of the 15-year planning horizon.
+
+The existing 12-month momentum ranking puts XLE first and IAU last, while the extended minimum-variance solution holds zero XLE and 50% IAU. The difference is not a calculation error: momentum ranks backward-looking adjusted-price change, whereas the optimizer minimizes estimated covariance risk. This single signal has not demonstrated predictive accuracy and does not alter the optimizer.
+
 ## Point-in-time signal data card
 
 | Field | Definition |
@@ -69,6 +81,6 @@ The return-floor sensitivity reruns the original full-window estimates at **6%**
 
 ## Validation and remaining scope
 
-[`test_portfolio_engine.py`](../test_portfolio_engine.py) uses independent monthly-return and covariance fixtures and checks the prior portfolio results against [Lab 15's known answers](https://github.com/cmainville/FIN43900/blob/main/lab15/lab15-notes.md). [`test_milestone3.py`](../test_milestone3.py) covers the signal's boundaries and ranking, isolated estimate changes, correlation-preserving volatility stress, buy-plus-sell costs, feasible/infeasible floors, and process-status precedence. Results and Streamlit checks are recorded in [validation-and-ai-use.md](validation-and-ai-use.md).
+[`test_portfolio_engine.py`](../test_portfolio_engine.py) uses independent monthly-return and covariance fixtures and checks the prior portfolio results against [Lab 15's known answers](https://github.com/cmainville/FIN43900/blob/main/lab15/lab15-notes.md). [`test_milestone3.py`](../test_milestone3.py) covers the signal's boundaries and ranking, isolated estimate changes, correlation-preserving volatility stress, buy-plus-sell costs, feasible/infeasible floors, and process-status precedence. [`test_extended.py`](../test_extended.py) checks the 120-price source, offline raw-response replay, independently calculated return/covariance/risk quantities, and preservation of original allocations and monitoring. Results and Streamlit checks are recorded in [validation-and-ai-use.md](validation-and-ai-use.md). Student review of data provenance, calculations, and investment suitability remains pending.
 
 Independent investment suitability review, the committee recommendation, allocation range, and committee ask remain pending. The Locked Changed-Input Record remains empty until the student personally authors and commits the AI-off prediction before its separate designated run.

@@ -12,6 +12,8 @@ import pandas as pd
 
 TICKERS = ("VTI", "VXUS", "XLE", "IWM", "IAU")
 DATA_PATH = Path(__file__).parent / "data" / "prices_growth.csv"
+EXTENDED_DATA_PATH = Path(__file__).parent / "data" / "prices_growth_extended.csv"
+EXTENDED_RAW_PATH = Path(__file__).parent / "data" / "yahoo_raw_extended_2026-11-16.zip"
 RETURN_FLOOR = 0.06
 GRID_UNITS = 20  # One unit is five percentage points.
 MONITORING_THRESHOLD_POINTS = 20.0
@@ -42,6 +44,26 @@ def load_prices(path: Path = DATA_PATH) -> pd.DataFrame:
     values = prices.to_numpy(dtype=float)
     if not np.isfinite(values).all() or not (values > 0).all():
         raise ValueError("Prices must be finite, positive, and complete.")
+    prices.index = pd.DatetimeIndex(dates)
+    return prices
+
+
+def load_extended_prices(path: Path = EXTENDED_DATA_PATH) -> pd.DataFrame:
+    """Read the separate 120-month Yahoo snapshot without altering the Lab 15 data."""
+    frame = pd.read_csv(path)
+    if tuple(frame.columns) != ("Date", *TICKERS):
+        raise ValueError("Extended data needs exactly Date,VTI,VXUS,XLE,IWM,IAU columns.")
+    dates = pd.to_datetime(frame["Date"], format="%Y-%m-%d", errors="raise")
+    expected_dates = pd.date_range("2016-10-31", "2026-09-30", freq="ME")
+    if len(frame) != 120 or not dates.equals(pd.Series(expected_dates, name="Date")):
+        raise ValueError("Expected 120 unique, ordered month-end labels, 2016-10 through 2026-09.")
+    try:
+        prices = frame.loc[:, TICKERS].apply(pd.to_numeric, errors="raise")
+    except (TypeError, ValueError) as exc:
+        raise ValueError("Extended prices must be numeric.") from exc
+    values = prices.to_numpy(dtype=float)
+    if not np.isfinite(values).all() or not (values > 0).all():
+        raise ValueError("Extended prices must be finite, positive, and complete.")
     prices.index = pd.DatetimeIndex(dates)
     return prices
 
@@ -77,6 +99,13 @@ def estimate(prices: pd.DataFrame, last_36: bool = False) -> dict:
     if len(monthly) != (36 if last_36 else 59):
         raise ValueError("Wrong number of aligned monthly returns.")
     return estimate_from_returns(monthly)
+
+
+def estimate_extended(prices: pd.DataFrame) -> dict:
+    """Use all 119 aligned returns in the supplementary ten-year snapshot."""
+    if tuple(prices.columns) != TICKERS or len(prices) != 120:
+        raise ValueError("Extended estimates require the five-ETF 120-price snapshot.")
+    return estimate_from_returns(prices.pct_change(fill_method=None).iloc[1:])
 
 
 def weights_array(weights: dict[str, float]) -> np.ndarray:
@@ -334,15 +363,60 @@ def analyze(path: Path = DATA_PATH) -> dict:
     }
 
 
-def report_markdown(analysis: dict) -> str:
+def analyze_extended(base_analysis: dict, path: Path = EXTENDED_DATA_PATH) -> dict:
+    """Supplementary robustness evidence; original 59/36 results stay frozen."""
+    prices = load_extended_prices(path)
+    estimates = estimate_extended(prices)
+    solution = optimize(estimates)
+    windows = [
+        ("Extended 119 returns", estimates, solution),
+        ("Original 59 returns", base_analysis["full"], base_analysis["optimized_full"]),
+        ("Recent 36 returns", base_analysis["recent"], base_analysis["optimized_recent"]),
+    ]
+    comparisons = []
+    for left_index, right_index in ((0, 1), (0, 2), (1, 2)):
+        left_name, _, left_solution = windows[left_index]
+        right_name, _, right_solution = windows[right_index]
+        change = None
+        if left_solution["feasible"] and right_solution["feasible"]:
+            change = largest_weight_change(
+                left_solution["result"]["weights"], right_solution["result"]["weights"]
+            )
+        comparisons.append({
+            "left": left_name,
+            "right": right_name,
+            "largest_change": change,
+            "supplementary_threshold_breach": (
+                stability_trigger(change[1]) if change is not None and left_index == 0 else None
+            ),
+        })
+    volatilities = np.sqrt(np.diag(estimates["covariance"]))
+    correlations = estimates["covariance"] / np.outer(volatilities, volatilities)
+    common_risks = {
+        name: portfolio_metrics(window_solution["result"]["weights"], estimates)["volatility"]
+        if window_solution["feasible"] else None
+        for name, _, window_solution in windows
+    }
+    return {
+        "source_sha256": hashlib.sha256(Path(path).read_bytes()).hexdigest(),
+        "raw_archive_sha256": hashlib.sha256(EXTENDED_RAW_PATH.read_bytes()).hexdigest(),
+        "windows": windows,
+        "comparisons": comparisons,
+        "volatilities": volatilities,
+        "correlations": correlations,
+        "common_covariance_risks": common_risks,
+    }
+
+
+def report_markdown(analysis: dict, extended: dict | None = None) -> str:
     """Format actual engine results for the repository's visible output artifact."""
     def weights_text(result: dict) -> str:
         return " / ".join(f"{result['weights'][ticker]:.0%}" for ticker in TICKERS)
 
     lines = [
-        "# Executed Portfolio Output — Milestone 3",
+        "# Executed Portfolio Output — Milestone 4A",
         "",
-        "Generated by `python3 -m portfolio_engine` from the frozen dataset; no values were entered by hand.",
+        "Generated by `python3 -m portfolio_engine` from the frozen datasets; no values were entered by hand.",
         "",
         f"- Dataset: `data/prices_growth.csv` (SHA-256 `{analysis['source_sha256']}`)",
         "- Source: Yahoo Finance daily `Adj Close`, retrieved 2026-10-22 in Lab 15; last available trading day per completed month, labeled calendar month-end.",
@@ -466,14 +540,100 @@ def report_markdown(analysis: dict) -> str:
         f"**Current status: {analysis['process']['status']}** — "
         + " ".join(analysis["process"]["reasons"]),
     ]
+    if extended is not None:
+        lines += [
+            "",
+            "## Supplementary ten-year historical robustness",
+            "",
+            f"New Yahoo Finance daily Adj Close snapshot retrieved **2026-11-16**, labeled 2016-10-31 through 2026-09-30. It contains 120 aligned prices and 119 returns. CSV SHA-256: `{extended['source_sha256']}`; archived raw responses SHA-256: `{extended['raw_archive_sha256']}`. The original Lab 15 CSV remains unchanged for its 59- and 36-return windows; the two downloads are not spliced. See [source and replay notes](../data/extended-provenance.md).",
+            "",
+            "| Window and source | Optimized weights | Est. annual return | Est. annual volatility | Feasible candidates | 6% floor |",
+            "| --- | --- | ---: | ---: | ---: | --- |",
+        ]
+        for name, estimates, solution in extended["windows"]:
+            result = solution["result"]
+            floor_state = (
+                "Slack for all grid candidates"
+                if solution["feasible_count"] == solution["candidate_count"]
+                else "Binding at selected allocation"
+                if result is not None and abs(result["return"] - RETURN_FLOOR) < 1e-10
+                else "Slack at selected allocation"
+            )
+            return_text = f"{result['return']:.2%}" if result else "—"
+            volatility_text = f"{result['volatility']:.2%}" if result else "—"
+            lines.append(
+                f"| {name} | {weights_text(result) if result else 'Infeasible'} | "
+                f"{return_text} | {volatility_text} | "
+                f"{solution['feasible_count']:,}/{solution['candidate_count']:,} | {floor_state} |"
+            )
+        lines += [
+            "",
+            "ETF arithmetic annual return and sample annualized volatility estimates (each window uses its own frozen source):",
+            "",
+            "| Window | ETF | Return estimate | Volatility estimate |",
+            "| --- | --- | ---: | ---: |",
+        ]
+        for name, estimates, _ in extended["windows"]:
+            for index, ticker in enumerate(TICKERS):
+                lines.append(
+                    f"| {name} | {ticker} | {estimates['returns'][index]:.2%} | "
+                    f"{math.sqrt(estimates['covariance'][index, index]):.2%} |"
+                )
+        lines += [
+            "",
+            "Largest individual allocation moves:",
+            "",
+            "| Windows compared | Largest move | Threshold interpretation |",
+            "| --- | --- | --- |",
+        ]
+        for comparison in extended["comparisons"]:
+            ticker, points = comparison["largest_change"] or ("—", float("nan"))
+            interpretation = (
+                "Supplementary >20-point breach"
+                if comparison["supplementary_threshold_breach"] is True
+                else "Supplementary ≤20 points"
+                if comparison["supplementary_threshold_breach"] is False
+                else "Approved 59-vs-36 monitoring rule"
+            )
+            lines.append(
+                f"| {comparison['left']} vs {comparison['right']} | "
+                f"{ticker} {points:.0f} percentage points | {interpretation} |"
+            )
+        base = analysis["optimized_full"]["result"]["weights"]
+        recent = analysis["optimized_recent"]["result"]["weights"]
+        long = extended["windows"][0][2]["result"]["weights"]
+        lines += [
+            "",
+            f"Concentration by window, extended / original / recent: **IAU {long['IAU']:.0%} / {base['IAU']:.0%} / {recent['IAU']:.0%}**; **VTI {long['VTI']:.0%} / {base['VTI']:.0%} / {recent['VTI']:.0%}**; **VXUS {long['VXUS']:.0%} / {base['VXUS']:.0%} / {recent['VXUS']:.0%}**. The ten-year evidence retains and increases gold concentration; it does not make VXUS a core weight under the approved minimum-variance objective.",
+            "",
+            "### IAU covariance and diversification",
+            "",
+            f"On the extended window, IAU standalone volatility is **{extended['volatilities'][-1]:.2%}**. Its correlations with VTI / VXUS / XLE / IWM are "
+            + " / ".join(f"{value:.3f}" for value in extended["correlations"][-1, :-1])
+            + ". Low IAU correlation with VTI helps the 50/50 mix reduce estimated portfolio volatility below either standalone ETF. This is a covariance result, not proof that a 50% gold holding suits a 15-year investor.",
+            "",
+            "Supplementary risk comparison: evaluate each window's optimized weights on the **same extended-window covariance matrix** (these are not the optimization-window volatility figures):",
+            "",
+            "| Portfolio chosen from | Volatility on common extended covariance |",
+            "| --- | ---: |",
+        ]
+        for name, risk in extended["common_covariance_risks"].items():
+            lines.append(f"| {name} | {risk:.2%} |")
+        lines += [
+            "",
+            "The historical momentum ranking puts XLE first and IAU last, while the extended minimum-variance mix holds 0% XLE and 50% IAU. That disagreement is expected when one measure ranks backward-looking returns and the optimizer minimizes estimated covariance risk. Momentum has not been validated as a forecast and does not enter the optimizer.",
+            "",
+            "The windows overlap and use different sample estimates. Their own estimated volatilities are not directly like-for-like, and this exercise is **not** an independent out-of-sample backtest. The approved implementation status remains the original 59-vs-36 **REVIEW HOLD**; the extended comparisons are separately labeled supplemental evidence.",
+        ]
     lines += [
         "",
         "## Limits",
         "",
-        "Annual arithmetic returns and covariance are historical estimates, not compound growth forecasts or guarantees. The five-point grid is approximate. Revised adjusted-price histories can change a reconstructed signal, and this October snapshot is not a September point-in-time archive. Cost figures are hypothetical, exclude taxes, and may omit other implementation frictions. The signal and scenarios do not establish future performance or investment suitability. No final recommendation or allocation range is made.",
+        "Annual arithmetic returns and covariance are historical estimates, not compound growth forecasts or guarantees. The five-point grid is approximate. Revised adjusted-price histories can change a reconstructed signal; the original October snapshot is not a September point-in-time archive, and the new November snapshot is not a contemporaneous archive. Cost figures are hypothetical, exclude taxes, and may omit other implementation frictions. The signal and scenarios do not establish future performance or investment suitability. No final recommendation or allocation range is made.",
     ]
     return "\n".join(lines) + "\n"
 
 
 if __name__ == "__main__":
-    print(report_markdown(analyze()), end="")
+    base_analysis = analyze()
+    print(report_markdown(base_analysis, analyze_extended(base_analysis)), end="")

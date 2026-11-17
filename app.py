@@ -9,6 +9,7 @@ from portfolio_engine import (
     TICKERS,
     WARNING,
     analyze,
+    analyze_extended,
 )
 
 
@@ -17,7 +18,8 @@ st.set_page_config(page_title="FIN 43900 | Portfolio Decision System", layout="w
 
 @st.cache_data
 def results():
-    return analyze()
+    base = analyze()
+    return base, analyze_extended(base)
 
 
 def weight_table(result):
@@ -75,7 +77,7 @@ def show_portfolio(name, result):
 st.title("FIN 43900 | Portfolio Decision System")
 st.caption("Fixed historical snapshot · Estimated results, not a recommendation")
 try:
-    data = results()
+    data, robustness = results()
 except (OSError, ValueError) as exc:
     st.error(f"HARD FAILURE — Required input data or optimization failed: {exc}")
     st.stop()
@@ -186,6 +188,47 @@ with signal_tab:
         "The threshold is a monitoring trigger only; historical minimum volatility "
         "does not guarantee future stability."
     )
+    st.subheader("Supplementary historical robustness")
+    st.write(
+        "The ten-year Yahoo snapshot was retrieved 2026-11-16 and is separate from "
+        "the unchanged Lab 15 five-year source. The approved >20-point monitoring "
+        "rule still compares only the original 59 and recent 36 returns."
+    )
+    st.table([
+        {
+            "Window": name,
+            "VTI": f"{solution['result']['weights']['VTI']:.0%}" if solution["feasible"] else "—",
+            "VXUS": f"{solution['result']['weights']['VXUS']:.0%}" if solution["feasible"] else "—",
+            "IAU": f"{solution['result']['weights']['IAU']:.0%}" if solution["feasible"] else "—",
+            "All weights (VTI/VXUS/XLE/IWM/IAU)": weights_text(solution["result"]) if solution["feasible"] else "—",
+            "Est. return": f"{solution['result']['return']:.2%}" if solution["feasible"] else "—",
+            "Est. volatility": f"{solution['result']['volatility']:.2%}" if solution["feasible"] else "—",
+            "Feasible": f"{solution['feasible_count']:,}/{solution['candidate_count']:,}",
+        }
+        for name, _, solution in robustness["windows"]
+    ])
+    st.table([
+        {
+            "Comparison": f"{row['left']} vs {row['right']}",
+            "Largest ETF change": (
+                f"{row['largest_change'][0]} {row['largest_change'][1]:.0f} pp"
+                if row["largest_change"] else "unavailable"
+            ),
+            "Interpretation": (
+                "Supplementary >20 pp breach" if row["supplementary_threshold_breach"]
+                else "Supplementary ≤20 pp" if row["supplementary_threshold_breach"] is False
+                else "Approved monitoring comparison"
+            ),
+        }
+        for row in robustness["comparisons"]
+    ])
+    st.caption(
+        "On the extended sample the optimizer selects 50% VTI and 50% IAU, with 0% VXUS. "
+        "IAU's low correlation with VTI lowers estimated combined risk; this does not "
+        "establish that 50% gold is suitable. Each window uses different estimates, so "
+        "reported volatilities are not directly like-for-like. These overlapping windows "
+        "are not an out-of-sample backtest."
+    )
     st.subheader("Estimation sensitivity")
     st.table(scenario_rows(data["estimation_scenarios"]))
     st.caption(
@@ -233,5 +276,10 @@ with decision_tab:
     st.write(
         "These are historical estimates. Hard-rule compliance is separate from "
         "investment suitability, and the window change requires independent review."
+    )
+    st.write(
+        "Supplementary ten-year evidence selects 50% IAU and 0% VXUS; it does not "
+        "resolve the suitability question. The momentum ranking is descriptive and "
+        "does not enter the minimum-variance objective."
     )
     st.info("Final recommendation, allocation range, monitoring plan, and committee ask: pending student review.")
