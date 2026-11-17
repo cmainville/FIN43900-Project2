@@ -22,6 +22,7 @@ SIGNAL_END = "2026-09-30"
 SNAPSHOT_RETRIEVED = "2026-10-22"
 EQUAL_WEIGHT = dict.fromkeys(TICKERS, 0.20)
 LAB15_REFERENCE = dict(zip(TICKERS, (0.45, 0.25, 0.10, 0.10, 0.10)))
+STUDENT_PROPOSED = dict(zip(TICKERS, (0.40, 0.25, 0.15, 0.05, 0.15)))
 WARNING = (
     "REVIEW REQUIRED — Allocation instability exceeds the "
     "20-percentage-point monitoring threshold."

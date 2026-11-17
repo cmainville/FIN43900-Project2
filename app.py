@@ -13,6 +13,7 @@ from dashboard_analytics import (
 )
 from portfolio_engine import (
     EQUAL_WEIGHT, LAB15_REFERENCE, RETURN_FLOOR, SIGNAL_END, SNAPSHOT_RETRIEVED,
+    STUDENT_PROPOSED,
     TICKERS, WARNING, analyze, analyze_extended, analyze_policy, assess,
     largest_weight_change, load_extended_prices, load_prices, optimize,
     portfolio_metrics, rebalance_costs, stability_trigger,
@@ -31,6 +32,7 @@ EXPOSURES = {"VTI": "U.S. total equity", "VXUS": "International equity",
 OPTIONS = (
     "A — Equal Weight", "B — Lab 15 Reference",
     "C — Original Minimum-Volatility Portfolio",
+    "D — Student-Proposed Diversified Portfolio",
     "Illustrative Diversification Policy — NOT APPROVED", "Custom Portfolio",
 )
 WINDOWS = ("Extended 119 returns", "Original 59 returns", "Recent 36 returns")
@@ -85,6 +87,8 @@ def portfolio_for_option(option, base, policy):
     if option == OPTIONS[2]:
         return base["portfolios"]["C — Constrained Minimum Volatility"]
     if option == OPTIONS[3]:
+        return assess(STUDENT_PROPOSED, base["full"])
+    if option == OPTIONS[4]:
         return policy["rows"][1]["alternative"]["result"]
     weights = {ticker: st.session_state.get(f"custom_{ticker}", 20.0) / 100 for ticker in TICKERS}
     valid, _ = validate_custom_weights(weights)
@@ -271,7 +275,9 @@ def overview(base, extended, policy, original_prices):
     if result is None:
         st.error("Custom weights are invalid. Open Analytics → Portfolio Explorer to correct them.")
         return
-    if choice in OPTIONS[3:]:
+    if choice == OPTIONS[3]:
+        st.info("Student-selected preliminary conditional-pilot candidate; validation and committee authorization remain pending.")
+    elif choice in OPTIONS[4:]:
         st.warning("HYPOTHETICAL — This selected allocation is not an approved mandate amendment or committee decision.")
     portfolio_kpis(result, base["vti_benchmark"])
     columns = st.columns([1.05, 1.5])
@@ -344,7 +350,7 @@ def explorer(base, policy, original_prices):
         choice = st.selectbox("Portfolio", OPTIONS, key="portfolio_choice")
     with right:
         st.selectbox("Compare with", OPTIONS, key="compare_choice")
-    if choice == OPTIONS[4]:
+    if choice == OPTIONS[5]:
         st.caption("Custom/hypothetical portfolio · enter five weights; no automatic normalization.")
         columns = st.columns(5)
         for column, ticker in zip(columns, TICKERS):
@@ -362,6 +368,8 @@ def explorer(base, policy, original_prices):
     if selected is None:
         return
     if choice == OPTIONS[3]:
+        st.info("Student-proposed fixed allocation · preliminary conditional pilot, pending validation and committee authorization.")
+    if choice == OPTIONS[4]:
         st.warning("NOT APPROVED — IAU ≤20%, VXUS ≥15% are illustrative policy bounds.")
     portfolio_kpis(selected, base["vti_benchmark"])
     verdict_line(selected, choice in OPTIONS[3:])
@@ -684,6 +692,15 @@ def decision(base, extended, policy):
             st.write(f"Estimated return **{pct(proposed['return'])}** · "
                      f"volatility **{pct(proposed['volatility'])}**")
         with st.container(border=True):
+            st.markdown("**D · Student-proposed conditional-pilot candidate**")
+            student = assess(STUDENT_PROPOSED, base["full"])
+            st.write(weight_text(student["weights"]))
+            st.write(f"Estimated return **{pct(student['return'])}** · "
+                     f"volatility **{pct(student['volatility'])}** · "
+                     f"modeled mandate **{'PASS' if student['verdict']['pass'] else 'FAIL'}**")
+            st.caption("Student-selected fixed weights; not optimized or committee-approved. "
+                       "Preliminary conditional pilot remains subject to financial review and authorization.")
+        with st.container(border=True):
             st.markdown("**Evidence and principal risks**")
             st.write("Original C has 40% IAU; the extended-window optimum has 50% IAU. "
                      "The original 59-vs-36 change is 25 IAU points. The illustrative bounds "
@@ -697,8 +714,9 @@ def decision(base, extended, policy):
                  "implementation requires independent review and committee authorization. "
                  "Reassess the return floor, concentration suitability, data revisions, and "
                  "allocation stability before any implementation decision.")
-    st.info("Recommendation, allocation range, reversal triggers, and committee ask: "
-            "pending the student's independent investment judgment.")
+    st.info("Student's preliminary direction: conditional pilot of D. Final recommendation, "
+            "allocation range, reversal triggers, and committee ask remain pending independent "
+            "student validation and committee authorization.")
 
 
 if __name__ == "__main__":

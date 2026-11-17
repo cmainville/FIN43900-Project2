@@ -1,10 +1,10 @@
-AI use: OpenAI Codex (GPT-6) assisted with the application, portfolio engine, signal, stress tests, supplementary historical and illustrative policy analysis, dashboard redesign, automated tests, and documentation on 2026-11-15 and 2026-11-16. Material contributions and checks are tracked in [docs/validation-and-ai-use.md](docs/validation-and-ai-use.md).
+AI use: OpenAI Codex (GPT-6) assisted with the application, portfolio engine, signal, stress tests, supplementary historical and illustrative policy analysis, dashboard redesign, student-selected Portfolio D calculations, automated tests, and documentation on 2026-11-15 through 2026-11-17. Material contributions and checks are tracked in [docs/validation-and-ai-use.md](docs/validation-and-ai-use.md).
 
 Ownership and educational purpose: The investment analysis and final decision will be my own. This project is for education, not investment advice.
 
 # FIN 43900 | Portfolio Decision System
 
-This Streamlit application helps an investment committee evaluate a five-ETF portfolio process for a young investor with a flexible 15-year horizon. It compares two baselines with a constrained minimum-volatility portfolio, reports mandate verdicts, ranks one trailing-momentum signal, and shows four stress dimensions, a supplementary ten-year historical comparison, an illustrative diversification-policy sensitivity, and an implementation process status. The governing mandate is the student's intentional Lab 15 amendment to the earlier Lab 13 home-purchase mandate; see [mandate and methodology](docs/mandate-and-methodology.md). The app makes **no investment recommendation** yet.
+This Streamlit application helps an investment committee evaluate a five-ETF portfolio process for a young investor with a flexible 15-year horizon. It compares two baselines with a constrained minimum-volatility portfolio, reports mandate verdicts, ranks one trailing-momentum signal, and shows four stress dimensions, a supplementary ten-year historical comparison, an illustrative diversification-policy sensitivity, and an implementation process status. The student has selected fixed [Portfolio D](docs/proposed-allocation-analysis.md) for preliminary conditional-pilot review; final validation and committee authorization remain pending. The governing mandate is the student's intentional Lab 15 amendment to the earlier Lab 13 home-purchase mandate; see [mandate and methodology](docs/mandate-and-methodology.md).
 
 ## Install and launch
 
@@ -21,7 +21,7 @@ Open the local URL printed by Streamlit. The persistent sidebar opens on **Overv
 
 ```bash
 python -m portfolio_engine | cmp - docs/visible-executed-output.md
-python -m unittest -v test_portfolio_engine.py test_milestone3.py test_extended.py test_policy.py test_dashboard.py
+python -m unittest -v test_portfolio_engine.py test_milestone3.py test_extended.py test_policy.py test_dashboard.py test_proposed_portfolio.py
 ```
 
 The first command compares fresh engine output with the frozen artifact without replacing it. Interactive scenarios use local frozen inputs and session state; they never overwrite official output.
@@ -48,6 +48,7 @@ The first command compares fresh engine output with the frozen artifact without 
 | `requirements/` | Governing Project 2 brief, architecture, checklist, and AI boundary card |
 | `docs/mandate-and-methodology.md` | Approved mandate and calculation conventions |
 | `docs/visible-executed-output.md` | Actual generated finance results visible without running code |
+| `docs/proposed-allocation-analysis.md` | Student-selected Portfolio D results and conditional-pilot evidence |
 | `docs/requirements-tracker.md` | Requirement-to-evidence work plan |
 | `docs/decision-memo.md` | Investment committee memo outline |
 | `docs/validation-and-ai-use.md` | Working validation and AI-use record; reserved Locked Changed-Input Record section |

@@ -1,6 +1,6 @@
 # Project 2 Mandate and Portfolio Methodology
 
-**Status:** Milestone 5A dashboard implemented, 2026-11-16. The approved engine's calculated results remain in [visible-executed-output.md](visible-executed-output.md). They are historical estimates, not an investment recommendation.
+**Status:** Milestone 5B student-selected portfolio analysis added, 2026-11-17. The approved engine's calculated results remain in [visible-executed-output.md](visible-executed-output.md). They are historical estimates, not an investment recommendation.
 
 ## Mandate transition and approved mandate
 
@@ -26,6 +26,8 @@ The [prior Lab 15 engine](https://github.com/cmainville/FIN43900/blob/main/lab15
 - **A — Equal Weight:** 20% in each approved ETF.
 - **B — Existing Lab 15 Reference:** VTI 45%, VXUS 25%, XLE 10%, IWM 10%, IAU 10%.
 - **C — Constrained Minimum Volatility:** optimized on the approved grid using full-window estimates.
+
+**D — Student-Proposed Diversified Portfolio** is a separate fixed allocation of **40% VTI / 25% VXUS / 15% XLE / 5% IWM / 15% IAU**. The student selected it for preliminary conditional-pilot review; it is neither an optimizer output nor an amendment to the approved minimum-volatility mandate. Its weights remain fixed across all three estimation windows. [The reproducible Portfolio D analysis](proposed-allocation-analysis.md) records its own-window estimates, mandate checks, C/policy/VTI comparisons, monthly-observed drawdowns, hypothetical historical growth, and one-time B→D and C→D costs. A fixed-weight comparison does not cure the original optimizer's 59-vs-36 allocation instability or remove the official **REVIEW HOLD**. Financial validation, suitability judgment, final range, and committee authorization remain pending.
 
 The app shows all three portfolios' weights, estimated annual arithmetic return, estimated annualized volatility, hard-rule status, 6% objective status, and failed-rule reasons. VTI's own full-window return and volatility appear separately as market context. Baselines remain fixed even if an assumption change causes a failed objective.
 
