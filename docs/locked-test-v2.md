@@ -41,18 +41,37 @@ XLE benefited from strong energy-sector returns during portions of the historica
 
 ## Part B — Actual Results After Execution
 
-**Part A Commit SHA:**
+**Part A Commit SHA:** 4171e014c3b871993bce416523d46a65888f16c6
 
-**Execution Date and Time:**
+**Execution Date and Time:** 11/17/26 @ 5:14pm
 
 **Original Output:**
 
+My original Portfolio D had an estimated annual arithmetic return of 13.74% and annualized volatility of 13.27%. The portfolio passed the investment mandate.
+
 **Changed Output:**
+
+After increasing IWM from 5% to 25%, reducing VTI from 40% to 30%, and reducing XLE from 15% to 5%, my portfolio's estimated annual return decreased to 11.79%, while annualized volatility increased to 14.27%.
+
+This represents a 1.96 percentage-point decrease in estimated return and a 1.00 percentage-point increase in volatility. The revised portfolio still passed the investment mandate's 6% return requirement.
 
 **Actual Effect on Investment Decision:**
 
+The results weakened my case for increasing the IWM allocation. Although the revised portfolio provided greater small-cap exposure and reduced energy concentration, it produced a lower estimated return and higher volatility. I would maintain my original Portfolio D allocation rather than adopt this alternative. The existing REVIEW HOLD remains in effect.
+
 **Did the Results Match My Prediction?**
+
+Yes. I predicted that increasing small-cap exposure while reducing VTI and XLE would decrease estimated annual return and increase volatility. Both changes occurred in the expected direction.
 
 **Explanation of Results:**
 
+The results support my initial expectation that shifting additional weight toward IWM would produce a less favorable historical risk-return profile. Reducing exposure to XLE, which performed strongly during portions of the estimation period, contributed to the lower estimated return.
+
+The increase in volatility also suggests that the revised weights and historical relationships between the ETFs did not provide enough diversification benefit to offset the additional risk. These findings apply to the historical estimation window and do not guarantee similar future performance.
+
 **Supporting Evidence:**
+
+- [Before Screenshot](evidence/locked-v2-before.png)
+- [After Screenshot](evidence/locked-v2-after.png)
+- [Part A Prediction Commit](https://github.com/cmainville/FIN43900-Project2/commit/4171e014c3b871993bce416523d46a65888f16c6)
+
