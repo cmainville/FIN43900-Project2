@@ -1,6 +1,6 @@
 # Validation and AI-Use Record
 
-**Status:** Submission preparation, 2026-11-17. Portfolio D is the student's fixed conditional-pilot candidate; the approved engine and official REVIEW HOLD remain intact. The completed Test 2 changed-input evidence is summarized below and preserved unchanged in its source file. Student review of the memo, AI-use dispositions, and the AI-off provenance concern remain open.
+**Status:** Submission preparation, 2026-11-17. The student approved the fixed Portfolio D conditional-pilot proposal, proposed ranges, monitoring cadence, and all eight AI-use ACCEPT dispositions. The student reports an independent Excel check of D's original-window return and volatility; Codex's separate read-only workbook inspection is recorded below. The approved engine and official REVIEW HOLD remain intact. The student confirms personally completing Test 2 without AI assistance; its complete Part A and Part B appear below, while the separate source file remains unchanged.
 
 ## Sources and as-of dates
 
@@ -12,9 +12,9 @@
 | [Lab 15 source notes](https://github.com/cmainville/FIN43900/blob/main/lab15/lab15-notes.md) and [price snapshot](https://github.com/cmainville/FIN43900/blob/main/lab15/prices_growth.csv) | Retrieved 2026-10-22 per Lab 15; inspected/copied 2026-11-15 | Yahoo Finance daily `Adj Close`; last trading-day close per month labeled calendar month-end; September 2026 observation cutoff, October 22 snapshot retrieval/availability | Local snapshot Git blob SHA `55604a3c2b34cbe041c99fb4ae828495cb0b1f1b` matches original; SHA-256 `9b8d269bddae60e67548ae9f68f71429a4eab001b67cb7efb03e14082cd2609d`; schema/window/value checks passed. Original raw vendor downloads were not independently re-fetched |
 | One cross-sectional momentum signal | Calculated 2026-11-15 from snapshot retrieved 2026-10-22 | September 2025 and September 2026 adjusted-price endpoints; no later observations | Exact endpoint, no-future-data, ranking, and invalid-endpoint tests in `test_milestone3.py`; complete data card in `docs/mandate-and-methodology.md` |
 | [Supplementary Yahoo snapshot](../data/extended-provenance.md) and [raw responses](../data/yahoo_raw_extended_2026-11-16.zip) | Retrieved 2026-11-16; observation cutoff 2026-09-30 | Yahoo Finance chart daily `adjclose`; final New York trading-day adjusted close per month, 2016-10 through 2026-09; separate from Lab 15 source | CSV SHA-256 `d011f64fddc6c3d68ce6301a655375563875fc7272b3e28f76f37d9092b93c34`; raw ZIP SHA-256 `de32e16737f9d003af9b13dc18bb8032e36eb9833c73c0d7efcad8aeea9d296f`; 120 aligned positive finite observations; offline raw replay matched CSV byte-for-byte. Student source review pending |
-| Illustrative diversification-policy bounds | Student's Milestone 4B instruction, 2026-11-16 | IAU ≤20%, VXUS ≥15%; same approved grid, objective, and 6% floor; **not** a mandate amendment | Engine and independent fixture checks below; suitability and any adoption require student review |
-| Student-selected Portfolio D | Student's Milestone 5B instruction, 2026-11-17 | Fixed VTI 40%, VXUS 25%, XLE 15%, IWM 5%, IAU 15%; preliminary conditional-pilot candidate, not an optimized result or approved amendment | Direct monthly-return/risk/growth checks and regression tests below; student suitability and committee authorization pending |
-| [Locked Changed-Input Record — Test 2](locked-changed-input-record-v2.md) | Part A recorded 2026-11-17 5:08 p.m.; committed 5:09 p.m. EST; run recorded 5:14 p.m.; Part B committed 5:16 p.m. | Student's fixed-weight IWM sensitivity on original 59 returns; distinct from ordinary development stress tests | Original Part A body is preserved in commit `4171e014c3b871993bce416523d46a65888f16c6` under its then filename `docs/locked-test-v2.md`; current file and screenshots are linked below. Original pre-run title says “AI-Assisted Draft,” creating an unresolved AI-off authorship concern requiring student clarification |
+| Illustrative diversification-policy bounds | Student's Milestone 4B instruction, 2026-11-16 | IAU ≤20%, VXUS ≥15%; same approved grid, objective, and 6% floor; **not** a mandate amendment | Engine and independent fixture checks below; overlay remains unapproved and any adoption needs a separate policy decision |
+| Student-selected Portfolio D | Student's Milestone 5B instruction, 2026-11-17 | Fixed VTI 40%, VXUS 25%, XLE 15%, IWM 5%, IAU 15%; student-approved conditional-pilot proposal, not an optimized result or approved amendment | Direct monthly-return/risk/growth checks and regression tests below; student reports independent Excel verification of original metrics; committee authorization pending |
+| [Locked Changed-Input Record — Test 2](locked-changed-input-record-v2.md) | Part A recorded 2026-11-17 5:08 p.m.; committed 5:09 p.m. EST; run recorded 5:14 p.m.; Part B committed 5:16 p.m. | Student confirms personally authoring and executing the fixed-weight IWM test without AI assistance; distinct from ordinary development stress tests | Original Part A body is preserved in commit `4171e014c3b871993bce416523d46a65888f16c6` under its then filename `docs/locked-test-v2.md`; current file and screenshots are linked below. Git history establishes the recorded sequence, while personal authorship is the student's direct confirmation |
 
 ## Tests and independent checks
 
@@ -51,21 +51,24 @@
 | 2026-11-17 | Portfolio D numerical and app regression | PASS: 38 tests | Python 3.14.7; `python3 -m unittest -q test_portfolio_engine.py test_milestone3.py test_extended.py test_policy.py test_dashboard.py test_proposed_portfolio.py` exited 0. New tests use direct monthly simple-return arithmetic and sample variance, independent wealth/drawdown loop, cost formula checks, fixed weights, mandate verdict, original A/B/C and REVIEW HOLD, source hashes, and Streamlit AppTest selection/Decision rendering. Bare-mode ScriptRunContext warnings only. These are AI-assisted tests, not student verification |
 | 2026-11-17 | Syntax, frozen output, and local server | PASS | `python3 -m py_compile app.py portfolio_engine.py dashboard_analytics.py test_proposed_portfolio.py`, `python3 -m portfolio_engine \| cmp - docs/visible-executed-output.md`, and `git diff --check` exited 0. Streamlit started on port 8511; `/_stcore/health` returned `ok`; server stopped. Local port access required sandbox permission. No manual browser interaction was performed |
 | 2026-11-17 | Submission-preparation clean setup and full regression | PASS: 38 tests | New Python 3.14.7 environment `/tmp/fin43900-final-venv` installed all four pinned top-level dependencies from `requirements.txt` after sandbox DNS restriction required network permission. Both local and fresh-env 38-test suites passed; all Python files passed `py_compile`. Fresh-env `python -m portfolio_engine \| cmp - docs/visible-executed-output.md` exited 0 after the generator added D without changing formulas or data. Fresh-env Streamlit on port 8512 returned `ok` from `/_stcore/health`, then stopped. Scripted AppTest covered navigation/controls; no new manual browser walkthrough is claimed |
-| 2026-11-17 | Source, links, secrets, locked evidence, and proposed ranges | PASS with open authorship issue | Three SHA-256 hashes match documented values; 17 local Markdown files had **zero missing local links**; a targeted scan of 35 tracked files found no `.env`/secrets file or credential-token/private-key pattern (not a forensic guarantee). Test 2 screenshots were visually inspected; its original Part A body matches pre-run commit `4171e01`; recalculated revised portfolio is 11.7880% return / 14.2700% volatility; proposed ranges contain 26 grid allocations in each window, all historically passing the 6% floor. Original pre-run title “AI-Assisted Draft” remains unresolved |
+| 2026-11-17 | Source, links, secrets, locked evidence, and proposed ranges | PASS | Three SHA-256 hashes match documented values; 17 local Markdown files had **zero missing local links**; a targeted scan of 35 tracked files found no `.env`/secrets file or credential-token/private-key pattern (not a forensic guarantee). Test 2 screenshots were visually inspected; its original Part A body matches pre-run commit `4171e01`; recalculated revised portfolio is 11.7880% return / 14.2700% volatility; proposed ranges contain 26 grid allocations in each window, all historically passing the 6% floor |
+| 2026-11-17 | Student-reported independent Excel check of fixed Portfolio D | REPORTED PASS | The student states they personally reproduced the original 59-return **13.74%** estimated annual arithmetic return and **13.27%** annualized volatility in Excel, independently of the application. This is the student's verification claim; Codex did not observe the student performing it |
+| 2026-11-17 | Codex read-only inspection of `Portfolio_D_Simple_Check.xlsx` | PASS, limited to workbook content and cached results | OOXML inspection found 60 month-end price rows matching `data/prices_growth.csv` exactly, 59 weighted monthly simple returns, `AVERAGE(G13:G71)*12` for annual arithmetic return, and sample `STDEV.S(G13:G71)*SQRT(12)` for volatility. Independent Python recomputation matched all 59 cached monthly returns within 1.4e-17 and the cached **13.7434012696% / 13.2729039252%** summary within rounding. No live Excel recalculation or authorship observation was performed |
+| 2026-11-17 | Final local refinement regression and integrity check | PASS: 38 tests; limited app health and repository audit | `python3 -m unittest -q` on all six test modules passed 38/38; `py_compile` passed for app, engine, helper, preparation script, and tests. Streamlit server on port 8514 returned `ok` at `/_stcore/health` after local network permission; no new manual browser walkthrough. Fresh `python3 -m portfolio_engine` output matched the saved artifact byte-for-byte. The original CSV, extended CSV, and raw ZIP SHA-256 values matched documented hashes. Local-link scan found 75 links across 17 Markdown files with zero missing targets; a targeted scan of 38 tracked files found no suspicious credential filenames or key/token patterns (not a forensic guarantee) |
 
 ## Current limitations
 
-- The student has identified D as a preliminary conditional-pilot candidate. The app reports the relevant historical estimates and the existing **REVIEW HOLD**; no final allocation range or committee-approved recommendation exists.
+- The student has approved D as a conditional-pilot proposal with proposed ranges and monitoring. The app reports the relevant historical estimates and the existing **REVIEW HOLD**; no committee-approved implementation exists.
 - The provisional 6% floor is slack across all grid allocations in all three studied windows. The original 59-vs-36 change is 25 IAU points; the supplementary 119-vs-36 comparison is 35 IAU points. The approved process status remains REVIEW HOLD.
 - The original Lab 15 Yahoo downloads were not re-fetched. A new, separate Yahoo snapshot was retrieved November 16; overlapping historical prices differ slightly, and the reason was not independently established. Historical adjusted prices may be revised by the vendor. Ten years remains shorter than the 15-year planning horizon; overlapping windows are not an independent out-of-sample backtest.
-- The extended optimizer selects 50% IAU and 0% VXUS. Its covariance rationale has been checked, but suitability, potential concentration policy, and any final allocation remain for the student and committee.
+- The extended optimizer selects 50% IAU and 0% VXUS. Its covariance rationale has been checked. The student chose D and approved a conditional proposal to address strategic concentration; any active concentration policy or implementation still requires committee authorization.
 - The unapproved IAU ≤20% / VXUS ≥15% overlay lowers estimated concentration and the illustrative 59-vs-36 largest move to 5 points, at a within-window estimated volatility cost of 1.23 points on the extended window and 0.57 on the original window. It does not remove the approved REVIEW HOLD or establish future suitability.
 - The interactive growth and drawdown are monthly-observed, fixed-weight monthly-rebalanced, in-sample hindsight reconstructions from frozen prices. The frontier is a nondominated boundary of the finite five-point grid; sampled cloud dots aid display and do not alter the boundary. None is a forward forecast or independent backtest. Browser visual review covered representative pages, while control changes were simulated with AppTest; student usability review remains pending.
 - The signal uses the September 2026 observation cutoff, but the snapshot was retrieved October 22. Adjusted histories can be revised; this is not a true September archived point-in-time dataset. It uses no forward returns and does not drive the optimizer.
 - Execution costs are illustrative one-time estimates that exclude taxes and may omit market impact or other frictions. The app does not model forward drawdowns or a compound 15-year growth forecast.
 - A passing modeled mandate verdict is not an investment suitability determination.
-- D is fixed across windows, so its unchanged weights cannot be used as a stability test of an optimized strategy. Its equity/energy/gold trade-offs, historical drawdowns, and costs need independent student assessment before a committee pilot decision.
-- The proposed D ranges and quarterly-review/annual-rebalance cadence in the memo are new committee proposals, not active mandate rules or approved implementation instructions. Historical range feasibility does not establish future feasibility or suitability.
+- D is fixed across windows, so its unchanged weights cannot be used as a stability test of an optimized strategy. The student has accepted the modeled equity/energy/gold trade-off for a conditional proposal, while the historical drawdowns and costs remain estimates and the committee has not authorized a pilot.
+- The student approved the proposed D ranges and quarterly-review/annual-rebalance cadence for committee consideration. They are not active mandate rules or approved implementation instructions. Historical range feasibility does not establish future feasibility or suitability.
 
 ## Material AI contributions and dispositions
 
@@ -80,11 +83,11 @@
 | 2026-11-17 | OpenAI Codex, GPT-6; product/model version beyond that label not exposed | Calculated the student's fixed Portfolio D on three frozen windows; added Explorer and Decision display, cost/drawdown analysis, targeted tests, and documentation. The student, not Codex, chose the allocation and preliminary conditional-pilot direction | Direct monthly arithmetic, independent drawdown loop, 38 automated tests, app selection/status AppTest, syntax, hashes, frozen-output comparison, and local server health passed. The student must independently verify interpretation, suitability, and decision | ACCEPT — Retain the Portfolio D calculations because direct return, risk, drawdown, cost, hash, and app checks passed; D remains my fixed allocation choice. |
 | 2026-11-17 | OpenAI Codex, GPT-6; product/model version beyond that label not exposed | Drafted the conditional-pilot memo, proposed ranges and monitoring process, manifest, video preparation, rubric audit, and final documentation alignment | Checked proposed range feasibility against all 10,626 grid candidates, recalculated A/B/C/D and Test 2 metrics, inspected Test 2 commit chronology and screenshots; final test/audit outcomes are logged above when executed. The student must approve or revise investment judgment and presentation claims | ACCEPT — Retain the proposed memo and submission documentation because range feasibility, portfolio figures, Test 2 calculations, and source links were checked; final investment and committee decisions remain subject to review. |
 
-For later material AI suggestions, record the task and output or concise trace, an independent source/calculation/invariant/counterexample, the resulting revision or decision, and the student's **ACCEPT / MODIFY / REJECT** reason. Do not treat AI agreement as verification.
+The eight ACCEPT decisions above were confirmed by the student. Some verification cells retain their contemporaneous wording about review or disposition being pending; those statements describe the earlier state when the work was logged, not the current disposition. For later material AI suggestions, record the task and output or concise trace, an independent source/calculation/invariant/counterexample, the resulting revision or decision, and the student's **ACCEPT / MODIFY / REJECT** reason. Do not treat AI agreement as verification.
 
 ## Locked Changed-Input Record — Test 2
 
-The complete original **Part A and Part B are preserved, unedited**, in [the student record](locked-changed-input-record-v2.md). Its [Part A prediction commit](https://github.com/cmainville/FIN43900-Project2/commit/4171e014c3b871993bce416523d46a65888f16c6) predates the recorded run and contains the Part A body under its former filename `docs/locked-test-v2.md`. The current file was later renamed. [Before](evidence/locked-v2-before.png) and [after](evidence/locked-v2-after.png) screenshots are present. The separate [earlier Test 1 record](locked-changed-input-record.md) is retained as historical evidence; Test 2 is the record integrated here. Neither record nor Git history was modified for this submission preparation.
+The complete original **Part A and Part B are reproduced verbatim below** from [the unchanged student record](locked-changed-input-record-v2.md). Its [Part A prediction commit](https://github.com/cmainville/FIN43900-Project2/commit/4171e014c3b871993bce416523d46a65888f16c6) predates the recorded run and contains the Part A body under its former filename `docs/locked-test-v2.md`. The current file was later renamed. [Before](evidence/locked-v2-before.png) and [after](evidence/locked-v2-after.png) screenshots are present. The separate [earlier Test 1 record](locked-changed-input-record.md) is retained as historical evidence. Neither locked source record nor Git history was modified for this refinement.
 
 | Field | Preserved Test 2 evidence and check |
 | --- | --- |
@@ -93,4 +96,80 @@ The complete original **Part A and Part B are preserved, unedited**, in [the stu
 | Predicted direction and decision effect | Lower estimated return, higher volatility, weaker case for replacing original D; retain D if borne out |
 | Part B run and evidence | Run recorded 2026-11-17 5:14 p.m.; results committed in `d493685215536e1636a84bf9252441e19b78cbf9` at 5:16 p.m. EST; screenshots show D **13.74% / 13.27%** and revised weights **11.79% / 14.27%**, with both mandate checks passing |
 | Independent numerical reconciliation | Current frozen 59-return data recalculate D to **13.7434% / 13.2729%** and revised weights to **11.7880% / 14.2700%**. Return decreases **1.96 percentage points** and volatility increases **1.00 point** after rounding. Direction matches Part A; the student record retains D and the official REVIEW HOLD |
-| Authorship boundary needing student resolution | The pre-run file's **original title was “Changed-Input Test 2 — AI-Assisted Draft.”** The repository proves the Part A text was committed before the recorded run, but cannot prove the prediction was authored without AI. This title conflicts with the course's AI-off requirement. The student must explain the provenance to the instructor and resolve the evidence question without changing or backdating the record. No AI-off compliance claim is made here |
+
+### Complete Part A and Part B — unchanged source text
+
+## Part A — Prediction Before Execution
+
+**Date and Time:** 11/17/26 @ 5:08pm
+
+**Input Being Changed:**
+
+I am testing how increasing IWM from 5% to 25% affects the estimated return and volatility of Portfolio D. I will fund the increase by reducing VTI from 40% to 30% and XLE from 15% to 5%.
+
+**Original Portfolio Allocation:**
+
+| ETF | Original | Revised |
+|---|---:|---:|
+| VTI | 40% | 30% |
+| VXUS | 25% | 25% |
+| XLE | 15% | 5% |
+| IWM | 5% | 25% |
+| IAU | 15% | 15% |
+| Total | 100% | 100% |
+
+**Original Estimated Results (59 Monthly Returns):**
+
+- Annualized arithmetic return: 13.74%
+- Annualized volatility: 13.27%
+- Mandate verdict: PASS
+
+**Expected Direction of Financial Output:**
+
+I expect the portfolio's estimated annual return to decrease and annualized volatility to increase. Increasing IWM to 25% creates a much larger small-cap allocation, while reducing exposure to VTI and XLE. I expect the additional small-cap risk to outweigh the diversification benefit over the historical estimation period.
+
+**Expected Effect on Investment Decision:**
+
+I expect this change to weaken my case for adopting the revised portfolio. Although IWM provides exposure to a broad range of smaller U.S. companies, I do not believe the additional allocation will improve the historical risk-return trade-off enough to justify replacing my original Portfolio D. If my prediction is correct, I would retain the original allocation and continue the conditional review process.
+
+**Financial Reasoning Behind Prediction:**
+
+XLE benefited from strong energy-sector returns during portions of the historical period, while smaller companies faced challenges associated with economic uncertainty and elevated borrowing costs. Reducing XLE and VTI to increase IWM may therefore lower the estimated portfolio return. I also expect greater volatility because small-cap stocks tend to be sensitive to economic conditions, and IWM overlaps with the broad U.S. equity exposure already represented by VTI. The actual volatility effect will depend on historical correlations between all five ETFs.
+
+---
+
+## Part B — Actual Results After Execution
+
+**Part A Commit SHA:** 4171e014c3b871993bce416523d46a65888f16c6
+
+**Execution Date and Time:** 11/17/26 @ 5:14pm
+
+**Original Output:**
+
+My original Portfolio D had an estimated annual arithmetic return of 13.74% and annualized volatility of 13.27%. The portfolio passed the investment mandate.
+
+**Changed Output:**
+
+After increasing IWM from 5% to 25%, reducing VTI from 40% to 30%, and reducing XLE from 15% to 5%, my portfolio's estimated annual return decreased to 11.79%, while annualized volatility increased to 14.27%.
+
+This represents a 1.96 percentage-point decrease in estimated return and a 1.00 percentage-point increase in volatility. The revised portfolio still passed the investment mandate's 6% return requirement.
+
+**Actual Effect on Investment Decision:**
+
+The results weakened my case for increasing the IWM allocation. Although the revised portfolio provided greater small-cap exposure and reduced energy concentration, it produced a lower estimated return and higher volatility. I would maintain my original Portfolio D allocation rather than adopt this alternative. The existing REVIEW HOLD remains in effect.
+
+**Did the Results Match My Prediction?**
+
+Yes. I predicted that increasing small-cap exposure while reducing VTI and XLE would decrease estimated annual return and increase volatility. Both changes occurred in the expected direction.
+
+**Explanation of Results:**
+
+The results support my initial expectation that shifting additional weight toward IWM would produce a less favorable historical risk-return profile. Reducing exposure to XLE, which performed strongly during portions of the estimation period, contributed to the lower estimated return.
+
+The increase in volatility also suggests that the revised weights and historical relationships between the ETFs did not provide enough diversification benefit to offset the additional risk. These findings apply to the historical estimation window and do not guarantee similar future performance.
+
+**Supporting Evidence:**
+
+- [Before Screenshot](evidence/locked-v2-before.png)
+- [After Screenshot](evidence/locked-v2-after.png)
+- [Part A Prediction Commit](https://github.com/cmainville/FIN43900-Project2/commit/4171e014c3b871993bce416523d46a65888f16c6)

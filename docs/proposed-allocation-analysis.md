@@ -1,6 +1,6 @@
 # Portfolio D — Student-Proposed Diversified Portfolio
 
-**Decision status:** The student selected VTI **40%**, VXUS **25%**, XLE **15%**, IWM **5%**, and IAU **15%** as a preliminary **conditional-pilot candidate**. This fixed allocation is the student's investment judgment, not an optimizer output or an approved mandate amendment. Financial validation and committee authorization remain pending. The original optimizer's **REVIEW HOLD** remains active.
+**Decision status:** The student selected VTI **40%**, VXUS **25%**, XLE **15%**, IWM **5%**, and IAU **15%** and approved a **conditional-pilot proposal** for committee consideration. This fixed allocation is the student's investment judgment, not an optimizer output or an approved mandate amendment. The student independently reproduced its original-window 13.74% estimated annual arithmetic return and 13.27% annualized volatility in Excel; committee authorization and REVIEW HOLD resolution remain pending.
 
 ## Inputs and calculation basis
 
@@ -43,4 +43,4 @@ One-way turnover is `0.5 × sum(abs(new weight − old weight))`; total buy-plus
 | B → D | 10% | 20% | 0.000% | 0.020% | 0.050% |
 | Original 59-return C → D | 35% | 70% | 0.000% | 0.070% | 0.175% |
 
-The current official **REVIEW HOLD** arises from a **25-percentage-point IAU change** between the original 59-return and recent 36-return **optimized** allocations. D's fixed weights do not remove that finding or authorize implementation. The [decision memo](decision-memo.md) proposes a conditional pilot, ETF allocation ranges, and monitoring for student and committee review. Those ranges are not active mandate rules. The completed [Test 2 changed-input record](locked-changed-input-record-v2.md) examines a different fixed-weight IWM allocation; its evidence and AI-off provenance caveat are documented in [validation](validation-and-ai-use.md). Financial suitability and committee authorization remain open.
+The current official **REVIEW HOLD** arises from a **25-percentage-point IAU change** between the original 59-return and recent 36-return **optimized** allocations. D's fixed weights do not remove that finding or authorize implementation. The student approved the [decision memo](decision-memo.md)'s conditional-pilot proposal, ETF allocation ranges, and monitoring framework for committee consideration. Those ranges are not active mandate rules. The completed [Test 2 changed-input record](locked-changed-input-record-v2.md) examines a different fixed-weight IWM allocation; its complete evidence is documented in [validation](validation-and-ai-use.md). Committee authorization and hold resolution remain open.

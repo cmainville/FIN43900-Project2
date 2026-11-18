@@ -7,8 +7,8 @@
 | 1 | Research-evolution artifact | **NOT REQUIRED — Project 2 exception** | Video 1 still explains how the system and thinking changed |
 | 2 | Accessible GitHub repository | [FIN43900-Project2](https://github.com/cmainville/FIN43900-Project2) | Confirm instructional-team access, including when logged out if public |
 | 3 | Visible executed financial output | [Generated output](https://github.com/cmainville/FIN43900-Project2/blob/main/docs/visible-executed-output.md) | Reproduce with `python -m portfolio_engine`; D analysis is [here](https://github.com/cmainville/FIN43900-Project2/blob/main/docs/proposed-allocation-analysis.md) |
-| 4 | Investment committee decision memo, Markdown | [Decision memo](https://github.com/cmainville/FIN43900-Project2/blob/main/docs/decision-memo.md) | Student reviews and approves proposed pilot, ranges, and monitoring before submission |
-| 5 | Validation and AI-use record, Markdown | [Validation record](https://github.com/cmainville/FIN43900-Project2/blob/main/docs/validation-and-ai-use.md); [locked source](https://github.com/cmainville/FIN43900-Project2/blob/main/docs/locked-changed-input-record-v2.md) | Resolve AI-off provenance concern; student records actual AI-use dispositions |
+| 4 | Investment committee decision memo, Markdown | [Decision memo](https://github.com/cmainville/FIN43900-Project2/blob/main/docs/decision-memo.md) | Student approved the conditional-pilot proposal, ranges, and monitoring; REVIEW HOLD resolution and committee authorization remain open |
+| 5 | Validation and AI-use record, Markdown | [Validation record](https://github.com/cmainville/FIN43900-Project2/blob/main/docs/validation-and-ai-use.md); [locked source](https://github.com/cmainville/FIN43900-Project2/blob/main/docs/locked-changed-input-record-v2.md) | Eight ACCEPT dispositions and student-reported Excel check recorded; complete student-confirmed AI-off Test 2 included |
 | 6 | Video 1 — system/thinking change and checked AI output, ≤3:00 | **PENDING YouTube URL, title, duration, caption review** | **PENDING actual timestamps:** opening statements __:__; evolution __:__; AI output and check __:__ |
 | 7 | Corrected Video 1 transcript | **PENDING GitHub link:** `docs/transcript-video-1.txt` after recording | Match spoken opening, numbers, names, and evidence segment |
 | 8 | Video 2 — code and reproducibility walkthrough, ≤5:00 | **PENDING YouTube URL, title, duration, caption review** | **PENDING actual timestamps:** opening __:__; data flow __:__; financial test __:__; limitation __:__ |
@@ -26,7 +26,6 @@ The [video preparation guide](video-production-guide.md) supplies planned scenes
 - [ ] Verify a small webcam view or approved equivalent identity/ownership evidence in all recordings; confirm clear audio.
 - [ ] Check that the memo, application, output, validation record, video narration, and corrected transcripts agree on D's weights, three-window estimates, ranges as **proposed**, and the active **REVIEW HOLD**.
 - [ ] Confirm Video 3's **first visible frame is the functioning application** and that the two required statements open each video.
-- [ ] Confirm the Test 2 AI-off provenance issue is addressed honestly with the instructor; do not alter the locked record or retroactively change its history.
 
 ## Brightspace frozen submission checklist
 

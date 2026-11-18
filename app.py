@@ -276,7 +276,7 @@ def overview(base, extended, policy, original_prices):
         st.error("Custom weights are invalid. Open Analytics → Portfolio Explorer to correct them.")
         return
     if choice == OPTIONS[3]:
-        st.info("Student-selected preliminary conditional-pilot candidate; validation and committee authorization remain pending.")
+        st.info("Student-approved conditional-pilot proposal; REVIEW HOLD resolution and committee authorization remain pending.")
     elif choice in OPTIONS[4:]:
         st.warning("HYPOTHETICAL — This selected allocation is not an approved mandate amendment or committee decision.")
     portfolio_kpis(result, base["vti_benchmark"])
@@ -318,7 +318,7 @@ def overview(base, extended, policy, original_prices):
         st.write("The approved minimum-volatility result concentrates 40% in IAU on the original "
                  "window; the supplementary ten-year result holds 50% IAU. The 59-versus-36 "
                  "monitoring breach places implementation on REVIEW HOLD.")
-        st.info("Recommendation and allocation range: pending independent student review.")
+        st.info("Student-approved proposal: conditional pilot of D within proposed ranges; committee authorization and REVIEW HOLD resolution remain pending.")
     with st.expander("Mandate, data, and calculation conventions"):
         st.write("Young wealth-accumulation investor; flexible 15-year horizon. Approved Lab 15 "
                  "objective: minimum estimated annualized volatility with a provisional 6% "
@@ -368,7 +368,7 @@ def explorer(base, policy, original_prices):
     if selected is None:
         return
     if choice == OPTIONS[3]:
-        st.info("Student-proposed fixed allocation · preliminary conditional pilot, pending validation and committee authorization.")
+        st.info("Student-proposed fixed allocation · conditional-pilot proposal approved by the student, pending REVIEW HOLD resolution and committee authorization.")
     if choice == OPTIONS[4]:
         st.warning("NOT APPROVED — IAU ≤20%, VXUS ≥15% are illustrative policy bounds.")
     portfolio_kpis(selected, base["vti_benchmark"])
@@ -699,7 +699,7 @@ def decision(base, extended, policy):
                      f"volatility **{pct(student['volatility'])}** · "
                      f"modeled mandate **{'PASS' if student['verdict']['pass'] else 'FAIL'}**")
             st.caption("Student-selected fixed weights; not optimized or committee-approved. "
-                       "Preliminary conditional pilot remains subject to financial review and authorization.")
+                       "Conditional pilot remains subject to REVIEW HOLD resolution and authorization.")
         with st.container(border=True):
             st.markdown("**Evidence and principal risks**")
             st.write("Original C has 40% IAU; the extended-window optimum has 50% IAU. "
@@ -714,9 +714,9 @@ def decision(base, extended, policy):
                  "implementation requires independent review and committee authorization. "
                  "Reassess the return floor, concentration suitability, data revisions, and "
                  "allocation stability before any implementation decision.")
-    st.info("Student's preliminary direction: conditional pilot of D. Final recommendation, "
-            "allocation range, reversal triggers, and committee ask remain pending independent "
-            "student validation and committee authorization.")
+    st.info("Student-approved proposal: conditional pilot of D within the memo's proposed ranges, "
+            "with quarterly monitoring and annual rebalancing consideration. The active REVIEW HOLD "
+            "requires written resolution and explicit committee authorization before implementation.")
 
 
 if __name__ == "__main__":

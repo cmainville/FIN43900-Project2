@@ -795,7 +795,7 @@ def report_markdown(analysis: dict, extended: dict | None = None,
         "",
         "## Limits",
         "",
-        "Annual arithmetic returns and covariance are historical estimates, not compound growth forecasts or guarantees. The five-point grid is approximate. Revised adjusted-price histories can change a reconstructed signal; the original October snapshot is not a September point-in-time archive, and the new November snapshot is not a contemporaneous archive. Cost figures are hypothetical, exclude taxes, and may omit other implementation frictions. The signal and scenarios do not establish future performance or investment suitability. The separate committee proposal remains subject to student review, hold resolution, and committee authorization.",
+        "Annual arithmetic returns and covariance are historical estimates, not compound growth forecasts or guarantees. The five-point grid is approximate. Revised adjusted-price histories can change a reconstructed signal; the original October snapshot is not a September point-in-time archive, and the new November snapshot is not a contemporaneous archive. Cost figures are hypothetical, exclude taxes, and may omit other implementation frictions. The signal and scenarios do not establish future performance or investment suitability. The student-approved committee proposal remains subject to REVIEW HOLD resolution and committee authorization.",
     ]
     return "\n".join(lines) + "\n"
 

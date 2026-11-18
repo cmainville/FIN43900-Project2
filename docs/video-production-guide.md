@@ -10,7 +10,7 @@ Speak both statements at the start of each recording. For **Video 3, show the fu
 >
 > Ownership and educational purpose: I selected Portfolio D and own the final investment analysis and decision. This project is for education, not investment advice.
 
-The student must change the “independently reviewed” clause if that review has not actually been performed by recording time. The [validation record](validation-and-ai-use.md) contains pending AI-use dispositions and a locked-test provenance concern that must be resolved honestly before the recordings claim AI-off compliance.
+The student has confirmed independent review of the eight material AI-use contributions and personal completion of the AI-off locked test; the [validation record](validation-and-ai-use.md) documents those statements and the supporting evidence. Any recording should describe the student's actual work accurately.
 
 ## Video 1 — How the system and thinking changed; one AI-output check (maximum 3:00)
 
