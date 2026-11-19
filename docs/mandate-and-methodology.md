@@ -1,6 +1,6 @@
 # Project 2 Mandate and Portfolio Methodology
 
-**Status:** Submission preparation, 2026-11-17. The approved engine's calculated results remain in [visible-executed-output.md](visible-executed-output.md). The student approved the [decision memo](decision-memo.md)'s conditional D pilot proposal; REVIEW HOLD resolution and committee authorization remain outstanding. Historical estimates are not a guarantee.
+**Status:** Final local audit, 2026-11-19. The approved engine's calculated results remain in [visible-executed-output.md](visible-executed-output.md); separate fixed-D downside results are in [portfolio-d-sensitivity-output.md](portfolio-d-sensitivity-output.md). The student approved the [decision memo](decision-memo.md)'s conditional D pilot proposal, the downside scenarios, and the revised REVIEW HOLD procedure. REVIEW HOLD resolution and committee authorization remain outstanding. Historical estimates are not a guarantee.
 
 ## Mandate transition and approved mandate
 
@@ -92,6 +92,10 @@ The historical-window comparison remains the full **59** returns versus the last
 The return-floor sensitivity reruns the original full-window estimates at **6%**, illustrative **16%**, and illustrative **25%**. An infeasible scenario is labeled and never silently relaxed. These floors are scenarios, not client-policy changes.
 
 **Process stop rule:** invalid required input data or no mandate-feasible allocation is a **HARD FAILURE**; implementation pauses. A feasible process with an individual ETF weight move **greater than 20 percentage points** between full and recent optimized windows is a **REVIEW HOLD**; implementation requires further independent review and committee authorization. A hold is not a permanent suitability judgment. Current data and optimizations pass, but IAU moves **25 points**, so the current status is **REVIEW HOLD**.
+
+For the proposed **fixed D pilot**, a validated D weight or 6% return-objective failure is also an implementation stop even if some other optimized portfolio remains feasible. The [committee memo](decision-memo.md) separates those hard failures from the unchanged optimizer monitoring trigger, suitability judgment, and explicit committee authorization. D's fixed weights cannot pass the optimizer stability test by construction. A written committee resolution could authorize a conditional D pilot despite the historical trigger, but it would not erase the app's REVIEW HOLD diagnostic. Quarterly review and possible annual rebalancing are proposed controls, not automatic trading instructions.
+
+The [supplementary D downside analysis](proposed-allocation-analysis.md#supplementary-fixed-weight-downside-sensitivity) holds its weights fixed on the original 59-return estimates. It separately cuts all four equity ETFs' annual arithmetic return estimates by 10 percentage points, raises each IAU-equity correlation by 0.20 while rebuilding and checking the covariance matrix, and scales all four equity volatilities by 1.25 on both covariance axes while preserving correlations. [`portfolio_d_sensitivity.py`](../portfolio_d_sensitivity.py) generates the [visible scenario output](portfolio-d-sensitivity-output.md), and [`test_portfolio_d_sensitivity.py`](../test_portfolio_d_sensitivity.py) uses independent numerical fixtures. A hypothetical stress failure is not an observed change to the approved base estimates or the student-owned locked test.
 
 ## Validation and remaining scope
 
